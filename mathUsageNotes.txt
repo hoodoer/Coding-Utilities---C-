@@ -1,0 +1,61 @@
+To rotate and translate a vector using a matrix:
+
+CVec3 Point( 100.0f, 0.0f, 0.0f );
+CMatrix M;
+M.Rotate( 90, 0, 1, 0 );
+M.Translate( CVec3( 0.0f, 0.0f, 50.0f ) );
+CVec3 NewPoint = M * Point;
+CVec3 OldPoint = M.InvertSimple() * NewPoint;
+
+
+
+To find the angle between two vectors (normalized):
+
+float angle = acosf(vector1.Dot(vector2)) * RAD_TO_DEG;
+
+
+
+To find the signed angle between two normalized vectors (2d):
+
+angle = atan2f(vector2.y, vector2.x) - atan2f(vector1.y, vector1.x) * RAD2DEG;
+
+
+
+
+
+To find where an agents heading intersect a line/wall, to find
+distance to where it's pointing:
+  static Line2D leftWall   = { 50.0,  50.0,  50.0, 650.0};
+  static Line2D bottomWall = { 50.0,  50.0, 650.0,  50.0};
+  static Line2D rightWall  = {650.0,  50.0, 650.0, 650.0};
+  static Line2D topWall    = { 50.0, 650.0, 650.0, 650.0};
+  static Line2D robotAimLine;
+
+  static CVec3   northVector(0.0, 1.0, 0.0);
+  static CVec3   robotHeadingVector;
+  static CVec3   robotPosVector;
+  static CVec3   robotAimPointVector;
+  static CMatrix rotationMatrix;
+  static Point2D intersectPoint;
+
+  rotationMatrix.Identity();
+  rotationMatrix.Rotate(testAgent.agentHdg, 0, 0, 1);
+  robotHeadingVector = rotationMatrix * northVector;
+  robotHeadingVector = robotHeadingVector * MAX_DISTANCE;
+
+  robotPosVector.x = testAgent.agentPos.x;
+  robotPosVector.y = testAgent.agentPos.y;
+  robotPosVector.z = 0.0;
+
+  robotAimPointVector = robotPosVector + robotHeadingVector;
+
+  // need to create line from robot to wall based on heading
+  robotAimLine.x1 = testAgent.agentPos.x;
+  robotAimLine.y1 = testAgent.agentPos.y;
+  robotAimLine.x2 = robotAimPointVector.x;
+  robotAimLine.y2 = robotAimPointVector.y;
+
+  if (intersect2dLines(robotAimLine, leftWall, intersectPoint))
+  {
+      cout<<"Intersects with left wall at: ("<<intersectPoint.x<<", "<<intersectPoint.y<<")"<<endl;
+  }
