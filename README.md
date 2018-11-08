@@ -1,5 +1,5 @@
 # Coding-Utilities---C-
-Header files with useful C++ classes for 3-D math, compression, timing
+Header files with useful C++ classes for 3-D math, compression, timing, etc. 
 
 
 
